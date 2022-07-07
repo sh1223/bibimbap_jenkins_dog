@@ -11,32 +11,43 @@ def bibimbap_dog():
     if running == "run":
 
         _hostname = hostname.get() #"google.com"
-        _interval = int(interval.get())
+
+        try:
+            _interval = int(interval.get())
+        except ValueError:
+            _interval = 1000 * 60
+
         response = os.system("ping -c 1 " + _hostname)
 
         #and then check the response...
         if response == 0:
             print(_hostname, 'is up!')
             text_box_1.configure(state="normal")
-            text_box_1.insert("end-1c", f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} {_hostname} is up !\n")
+            text_box_1.insert("end-1c", f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} {_hostname} up!\n")
             text_box_1.configure(state="disabled")
             print(text_box_1.index("end"), "@@@@@@@@@@@")
 
-            if int(text_box_1.index("end").split('.')[0]) > 16:
+            if int(text_box_1.index("end").split('.')[0]) > 26:
                 text_box_1.configure(state="normal")
                 text_box_1.delete("1.0", "end")
                 text_box_1.configure(state="disabled")
                 print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
         else:
             print(_hostname, 'is down!')
-            text_box_1.configure(state="normal")
-            text_box_1.insert("end-1c", f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} {_hostname} is down !\n")
-            text_box_1.configure(state="disabled")
+            text_box_2.configure(state="normal")
+            text_box_2.insert("end-1c", f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} {_hostname} is down !\n Let's restart jenkins server\n")
+            text_box_2.configure(state="disabled")
             
             # TODO
             # run command line
+
+            if int(text_box_1.index("end").split('.')[0]) > 26:
+                text_box_1.configure(state="normal")
+                text_box_1.delete("1.0", "end")
+                text_box_1.configure(state="disabled")
+                print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
             
-            time.sleep(30)
+            time.sleep(10)
 
         root.after(_interval, bibimbap_dog)
 
@@ -70,7 +81,7 @@ root.geometry("820x550")
 root.columnconfigure(0, weight=1)
 
 hostname = tk.StringVar()
-interval = tk.StringVar()
+interval = tk.StringVar(value=60000) # default value set with value arg
 
 
 input_frame = ttk.Frame(root, padding=(20, 10, 20, 0)) #left, top, right, buttom
